@@ -23,7 +23,7 @@ function App() {
           To Do:
         </h2>
         {taskList.slice(0).reverse().map((task, i) => (
-          <ToDo key={new Date().getTime()} task={task} index={i} taskList= {taskList} setTaskList= {setTaskList} />
+          <ToDo key={task.id} task={task} index={i} taskList= {taskList} setTaskList= {setTaskList} />
         ))}
       </div>
     </div>
