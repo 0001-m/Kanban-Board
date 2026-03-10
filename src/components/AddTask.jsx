@@ -12,11 +12,20 @@ const AddTask = ({ taskList, setTaskList }) => {
     if (!projectName) {
       setErrorMessage("Enter project name to continue");
     } else {
-      let timestamp = new Date().getTime();
-      setTaskList([...taskList, { id: Date.now(), projectName, taskDescription, timestamp: timestamp }]);
+      const newTask = {
+        id: Date.now(),
+        projectName,
+        taskDescription,
+        timestamp: new Date(),
+        duration: 0
+      };
+      const updatedList = [...taskList, newTask];
+      setTaskList(updatedList);
+      localStorage.setItem("taskList", JSON.stringify(updatedList));
       setAddModal(false);
       setProjectName("");
       setTaskDescription("");
+      setErrorMessage("");
     }
   };
 
@@ -54,7 +63,7 @@ const AddTask = ({ taskList, setTaskList }) => {
               <form className="p-6 pt-6 pb-4">
                 <div>
                   <label
-                    className="track-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
+                    className="tracking-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
                     htmlFor="project-name"
                   >
                     Project Name
@@ -75,8 +84,8 @@ const AddTask = ({ taskList, setTaskList }) => {
                 </div>
                 <div>
                   <label
-                    className="track-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
-                    htmlFor="project-name"
+                    className="tracking-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
+                    htmlFor="task-description"
                   >
                     Task Description
                   </label>

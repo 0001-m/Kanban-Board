@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import AddTask from "./components/AddTask";
 import ToDo from "./components/ToDo";
 
 function App() {
   const [taskList, setTaskList] = useState([]);
-  console.log(taskList)
+
+  useEffect(() => {
+    let array = localStorage.getItem("taskList");
+
+    if(array){
+      try {
+        const parsed = JSON.parse(array);
+        const withIds = parsed.map(task => ({ ...task, id: task.id || Date.now() + Math.random() }));
+        setTaskList(withIds);
+      } catch (e) {
+        console.error("Error parsing localStorage data:", e);
+        localStorage.removeItem("taskList"); // Clear corrupted data
+      }
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-300">
@@ -24,7 +38,7 @@ function App() {
           To Do:
         </h2>
         {taskList.map((task, i) => (
-          <ToDo key={i} task={task}  taskList= {taskList} setTaskList= {setTaskList} />
+          <ToDo key={task.id || i} task={task}  taskList= {taskList} setTaskList= {setTaskList} />
         ))}
       </div>
     </div>

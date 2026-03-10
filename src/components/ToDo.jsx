@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import EditTask from "./EditTask";
 
-const Todo = ({ task, index, taskList, setTaskList }) => {
-  const [time, setTime] = useState(0);
+const Todo = ({ task, taskList, setTaskList }) => {
+  const [time, setTime] = useState(task.duration);
   const [running, setRunning] = useState(false);
 
 
@@ -19,10 +19,29 @@ const Todo = ({ task, index, taskList, setTaskList }) => {
   }, [running])
 
 
+  const handleStop = () => {
+    setRunning(false);
+
+    let taskIndex = taskList.indexOf(task);
+    taskList.splice(taskIndex, 1, {
+      projectName: task.projectName,
+      taskDescription: task.taskDescription,
+      timestamp: task.timestamp,
+      duration: time
+    })
+    localStorage.setItem("taskList", JSON.stringify(taskList));
+    window.location.reload();
+  }
+
+
   const handleDelete = (itemID) => {
-    setTaskList((currentTasks) =>
-      currentTasks.filter((todo) => todo.id !== itemID),
-    );
+    let removeIndex = taskList.indexOf(task);
+    task.splice(removeIndex, 1);
+    localStorage.setItem("taskList", JSON.stringify(taskList));
+    window.location.reload();
+    // setTaskList((currentTasks) =>
+    //   currentTasks.filter((todo) => todo.id !== itemID),
+    // );
   };
 
   return (
@@ -32,7 +51,6 @@ const Todo = ({ task, index, taskList, setTaskList }) => {
           <p className="font-semibold text-xl">{task.projectName}</p>
           <EditTask
             task={task}
-            index={index}
             taskList={taskList}
             setTaskList={setTaskList}
           />
@@ -53,7 +71,7 @@ const Todo = ({ task, index, taskList, setTaskList }) => {
           <div className=" flex flex-row justify-evenly gap-4">
             {running ? (
               <button className="border rounded-lg py-1 px-3" 
-              onClick={() => {setRunning(false)}}>Stop</button>
+              onClick={(handleStop) => {setRunning(false)}}>Stop</button>
             ) : (
               <button className="border rounded-lg py-1 px-3"
               onClick={() => {setRunning(true)}}>Start</button>

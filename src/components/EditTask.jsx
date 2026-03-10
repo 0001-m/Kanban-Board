@@ -23,11 +23,11 @@ const EditTask = ({ task, taskList, setTaskList}) => {
 
   const handleUpdate = e => {
     e.preventDefault();
-    let taskIndex = taskList.indexOf(task);
-    taskList.splice(taskIndex, 1);
-    setTaskList(
-        [...taskList, {projectName, taskDescription}]
-    );
+    const updatedTask = { ...task, projectName, taskDescription };
+    const updatedList = taskList.map(t => t.id === task.id ? updatedTask : t);
+    setTaskList(updatedList);
+    localStorage.setItem("taskList", JSON.stringify(updatedList));
+    window.location.reload();
     setEditModal(false);
     setProjectName("");
     setTaskDescription("");
@@ -57,7 +57,7 @@ const EditTask = ({ task, taskList, setTaskList}) => {
               <form className="p-6 pt-6 pb-4">
                 <div>
                   <label
-                    className="track-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
+                    className="tracking-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
                     htmlFor="project-name"
                   >
                     Project Name
@@ -75,8 +75,8 @@ const EditTask = ({ task, taskList, setTaskList}) => {
                 </div>
                 <div>
                   <label
-                    className="track-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
-                    htmlFor="project-name"
+                    className="tracking-wide uppercase text-gray-700 text-xs font-semibold mb-2 block"
+                    htmlFor="task-description"
                   >
                     Task Description
                   </label>
