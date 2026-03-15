@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const EditTask = ({ task, taskList, setTaskList}) => {
+const EditTask = ({ task, taskList, setTaskList, storageKey }) => {
   const [editModal, setEditModal] = useState(false);
 
   const [projectName, setProjectName] = useState("");
@@ -21,17 +21,16 @@ const EditTask = ({ task, taskList, setTaskList}) => {
   };
 
 
-  const handleUpdate = e => {
+  const handleUpdate = (e) => {
     e.preventDefault();
     const updatedTask = { ...task, projectName, taskDescription };
-    const updatedList = taskList.map(t => t.id === task.id ? updatedTask : t);
+    const updatedList = taskList.map((t) => (t.id === task.id ? updatedTask : t));
     setTaskList(updatedList);
-    localStorage.setItem("taskList", JSON.stringify(updatedList));
-    window.location.reload();
+    localStorage.setItem(storageKey, JSON.stringify(updatedList));
     setEditModal(false);
     setProjectName("");
     setTaskDescription("");
-  }
+  };
   return (
     <>
       <button className="bg-gray-400 text-white text-sm-uppercase font-semibold py-1.5 px-3 mt-6 mb-1 rounded-lg" 
